@@ -49,5 +49,19 @@ public class Relatorio {
                     });
         }
     }
+    public static void imprimirLivrosDisponibilidade(List<Livro> livros) {
+        System.out.println("\n=== 📚 Lista de Livros Cadastrados ===");
+
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        for (Livro l : livros) {
+            String status = l.isDisponivel() ? "Disponível" : "Emprestado";
+            System.out.println("Título: " + l.getTitulo() + " | Autor: " + l.getAutor() +
+                    " | Status: " + status);
+        }
+    }
 
 }
