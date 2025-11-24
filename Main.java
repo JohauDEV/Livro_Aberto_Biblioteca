@@ -16,6 +16,8 @@ public class Main {
             System.out.println("3. Realizar empréstimo");
             System.out.println("4. Devolver livro");
             System.out.println("5. Visualizar relatórios");
+            System.out.println("6. Visualizar livros cadastrados");
+            System.out.println("7. Gerenciar eventos literários");
             System.out.println("0. Sair e salvar");
             System.out.print("Escolha: ");
             opcao = sc.nextInt();
@@ -23,9 +25,7 @@ public class Main {
 
             switch (opcao) {
 
-                // =======================================
                 case 1: // CADASTRAR ASSOCIADO
-                    // =======================================
                     System.out.print("Nome do associado: ");
                     String nome = sc.nextLine();
 
@@ -41,9 +41,8 @@ public class Main {
                     System.out.println("Associado cadastrado com sucesso!");
                     break;
 
-                // =======================================
+
                 case 2: // CADASTRAR LIVRO
-                    // =======================================
                     System.out.print("Título do livro: ");
                     String titulo = sc.nextLine();
 
@@ -61,9 +60,8 @@ public class Main {
                     System.out.println("Livro cadastrado!");
                     break;
 
-                // =======================================
+
                 case 3: // REALIZAR EMPRÉSTIMO
-                    // =======================================
                     System.out.print("Nome do associado: ");
                     String nomeEmp = sc.nextLine();
                     Associado assocEmp = sistema.buscarAssociado(nomeEmp);
@@ -165,15 +163,86 @@ public class Main {
 
                     break;
 
-                // =======================================
-                case 5: // RELATÓRIOS
-                    // =======================================
+
+                case 5:
                     Relatorio.gerarRelatorioDetalhado(sistema);
                     break;
 
-                // =======================================
-                case 0: // SALVAR E SAIR
-                    // =======================================
+                case 6:
+                    Relatorio.imprimirLivrosDisponibilidade(sistema.getLivros());
+                    break;
+
+                case 7:
+                    System.out.println("\n=== GERENCIAR EVENTOS LITERÁRIOS ===");
+                    System.out.println("1. Cadastrar novo evento");
+                    System.out.println("2. Reservar vaga em evento");
+                    System.out.print("Escolha: ");
+                    int opEvento = sc.nextInt();
+                    sc.nextLine();
+
+                    if (opEvento == 1) {
+                        // Cadastro
+                        System.out.print("Nome do evento: ");
+                        String nomeEvento = sc.nextLine();
+
+                        System.out.print("Número de vagas: ");
+                        int vagas = sc.nextInt();
+                        sc.nextLine();
+
+                        Evento ev = new Evento(nomeEvento, vagas);
+                        sistema.cadastrarEvento(ev);
+
+                        System.out.println("Evento cadastrado com sucesso!");
+
+                    } else if (opEvento == 2) {
+                        // Reserva
+                        System.out.print("Nome do evento: ");
+                        String nomeEv = sc.nextLine();
+
+                        Evento evento = sistema.getEventos().stream()
+                                .filter(e -> e.getNome().equalsIgnoreCase(nomeEv))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (evento == null) {
+                            System.out.println("Evento não encontrado!");
+                            break;
+                        }
+
+                        System.out.print("Nome do associado: ");
+                        String nomeAssocEvento = sc.nextLine();
+
+                        Associado assocEvento = sistema.buscarAssociado(nomeAssocEvento);
+
+                        if (assocEvento == null) {
+                            System.out.println("Associado não encontrado!");
+                            break;
+                        }
+
+                        boolean reservado;
+
+                        // 🎖 PRIORIDADE VIP
+                        if (assocEvento instanceof AssociadoVIP) {
+                            System.out.println("Associado VIP detectado → reserva prioritária!");
+                            reservado = evento.reservaVIP(assocEvento);
+                        } else {
+                            reservado = evento.reservarVaga(assocEvento);
+                        }
+
+                        if (reservado) {
+                            System.out.println("Vaga reservada com sucesso!");
+                        } else {
+                            System.out.println("Evento lotado! Não foi possível reservar a vaga.");
+                        }
+                    } else {
+                        System.out.println("Opção inválida!");
+                    }
+
+                    break;
+
+
+                case 0:
+
                     sistema.salvarDados();
                     System.out.println("Sistema encerrado. Dados salvos!");
                     break;
