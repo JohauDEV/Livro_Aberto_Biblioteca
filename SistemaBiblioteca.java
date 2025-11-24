@@ -132,4 +132,11 @@ public class SistemaBiblioteca {
             System.out.println("Erro ao carregar dados: " + e.getMessage());
         }
     }
+    public void cadastrarEvento(Evento e) {
+        eventos.add(e);
+    }
+    public List<Evento> getEventos() {
+        return eventos;
+    }
+
 }
