@@ -1,180 +1,232 @@
-Aqui está um **README completíssimo**, pronto para **copiar e colar no GitHub ou no VSCode**.
-Ele segue o formato padrão de projetos Java, bem organizado e com seções claras.
+# 📚 **Sistema de Biblioteca – README Completo**
+
+## 🏛️ Sobre o Projeto
+
+Este é um **sistema completo de gerenciamento de biblioteca**, desenvolvido em Java com arquitetura orientada a objetos.
+O objetivo é criar uma aplicação robusta que:
+
+✔ Gerencie livros, associados e empréstimos
+✔ Controle eventos e reserva de vagas
+✔ Registre pagamentos automáticos de multas
+✔ Diferencie privilégios entre usuários regulares e VIP
+✔ Salve tudo em arquivos **UTF-8 persistentes**
+✔ Garanta integridade dos dados e regras reais de negócio
+
+A aplicação roda no console por meio da classe `BibliotecaApp`, deixando toda a lógica nas classes de domínio.
 
 ---
 
-# 📚 Biblioteca "Livro Aberto" – Sistema de Empréstimo
+# 🧩 **Funcionalidades Principais**
 
-Sistema completo de gerenciamento de biblioteca, desenvolvido em **Java**, com:
+## 👤 **1. Gerenciamento de Associados**
 
-* Cadastro de associados (Regular / VIP)
-* Cadastro de livros (Comuns / Raros)
-* Empréstimo de livros com prazos diferenciados
-* Devolução com cálculo automático de multas
-* Programa de benefícios para associados VIP
-* Registro de pagamentos
-* Relatórios detalhados de uso e frequência
-* Salvamento automático em arquivos
-* Carregamento dos dados ao iniciar o sistema
+* Cadastro de associado
+* Dois tipos disponíveis:
+
+  * **Regular** → prazo 10 dias, sem desconto
+  * **VIP** → prazo 15 dias, desconto em multa, acesso a livros e eventos exclusivos
+* Armazenados com persistência
 
 ---
 
-## 📌 Funcionalidades Principais
+## 📘 **2. Gerenciamento de Livros**
 
-### ✔ Cadastro de Associados
+Cada livro contém:
 
-* Associado **Regular** → Prazo de 10 dias, sem desconto
-* Associado **VIP** → Prazo de 15 dias, 50% de desconto em multas
+* Título
+* Autor
+* Boolean **raro**
+* Boolean **vipOnly** (acesso restrito aos VIPs)
+* Disponibilidade
+* Persistência completa em arquivo
 
-### ✔ Cadastro de Livros
+### ➤ Regras aplicadas:
 
-* Livros comuns
-* Livros raros (somente associados VIP podem retirar)
-
-### ✔ Empréstimo de Livros
-
-* Digitação da data do empréstimo
-* Geração automática da data prevista de devolução conforme o tipo de associado
-* Registro completo salvo em arquivo
-
-### ✔ Devolução de Livros
-
-* Solicita nome do associado e título do livro
-* Digita data da devolução
-* Calcula multa automaticamente:
-
-  ```
-  R$1,00 por dia após o prazo limite
-  (10 dias Regular / 15 dias VIP)
-  ```
-* Inclui desconto VIP automaticamente
-* Registra pagamento da multa no arquivo
-
-### ✔ Relatórios Detalhados
-
-* Histórico completo de empréstimos
-* Empréstimos em aberto
-* Quantidade total por associado
-* Multas pagas e total acumulado
-* Datas de empréstimo/devolução e valores por livro
-
-### ✔ Persistência dos Dados
-
-O sistema salva automaticamente:
-
-| Arquivo                 | Conteúdo                             |
-| ----------------------- | ------------------------------------ |
-| `dados_associados.txt`  | Nome e tipo do associado             |
-| `dados_livros.txt`      | Livros cadastrados e disponibilidade |
-| `dados_emprestimos.txt` | Empréstimos completos com datas      |
-| `dados_pagamentos.txt`  | Registros de multas pagas            |
-
-Ao iniciar, o sistema lê todos os arquivos e restaura o estado anterior.
+✔ Não permite cadastrar **mesmo título** com modalidades diferentes (VIP/Normal, Raro/Não raro).
+✔ Livros VIP só podem ser emprestados para VIPs.
+✔ Livros raros também usam as mesmas regras.
 
 ---
 
-## 📦 Estrutura do Projeto
+## 🔄 **3. Sistema de Empréstimo**
+
+O sistema controla:
+
+* Data de empréstimo
+* Data prevista (conforme tipo do associado)
+* Data de devolução
+* Controle automático de disponibilidade
+
+### Multas:
+
+* R$ 1,00 por dia de atraso
+* VIP paga somente **50% da multa**
+* Registro manual em `Pagamento`
+
+---
+
+## 💳 **4. Sistema de Pagamentos**
+
+Toda multa gerada é convertida em um objeto:
 
 ```
-📂 src
- ┣ 📜 Main.java
- ┣ 📜 SistemaBiblioteca.java
+Pagamento(nomeAssociado, tituloLivro, valor)
+```
+
+Esses pagamentos são:
+
+* Registrados no sistema
+* Persistidos em `dados_pagamentos.txt`
+* Exibidos nos relatórios
+
+---
+
+## 🗓️ **5. Sistema de Eventos**
+
+A biblioteca permite:
+
+✔ Criar eventos
+✔ Definir vagas
+✔ Associar data
+✔ Inscrever participantes
+✔ Garantir prioridade VIP
+
+### Regra especial:
+
+Se o evento estiver lotado e um **VIP tentar entrar**, o sistema:
+
+1. Procura um participante não-VIP
+2. Remove ele
+3. Adiciona o VIP
+
+---
+
+## 📊 **6. Relatórios Detalhados**
+
+### Disponíveis:
+
+* Relatório detalhado do sistema
+* Relatório de livros cadastrados
+* Relatório de eventos
+
+### Relatório detalhado inclui:
+
+* Empréstimos totais por associado
+* Empréstimos em aberto
+* Multas pagas
+* Lista de livros emprestados com datas
+* Todos os pagamentos registrados
+
+---
+
+## ♻️ **7. Persistência Completa (UTF-8)**
+
+Todos os dados são salvos em arquivos:
+
+```
+dados_associados.txt
+dados_livros.txt
+dados_emprestimos.txt
+dados_pagamentos.txt
+dados_eventos.txt
+```
+
+Todos lidos e carregados automaticamente no início do programa.
+
+---
+
+# 🧱 **Estrutura do Projeto (Arquitetura)**
+
+```
+📦 src/
+ ┣ 📜 BibliotecaApp.java     → Interface do usuário (console)
+ ┣ 📜 SistemaBiblioteca.java → Lógica principal e persistência
  ┣ 📜 Associado.java
  ┣ 📜 AssociadoVIP.java
  ┣ 📜 Livro.java
- ┣ 📜 LivroRaro.java
  ┣ 📜 Emprestimo.java
  ┣ 📜 Pagamento.java
+ ┣ 📜 Evento.java
  ┗ 📜 Relatorio.java
-
-📄 dados_associados.txt
-📄 dados_livros.txt
-📄 dados_emprestimos.txt
-📄 dados_pagamentos.txt
 ```
+
+### Arquitetura:
+
+* **BibliotecaApp** apenas exibe menus e lê dados do usuário
+* **SistemaBiblioteca** faz toda a lógica
+* **Domínio (Livro, Associado, Evento, etc)** contém as regras
+* **Relatorio** imprime tudo formatado
 
 ---
 
-## ▶ Como Executar
+# 🖥️ **Fluxo de Execução**
 
-### 1. Compile o projeto:
+1. Usuário inicia o `BibliotecaApp`
+2. Menu oferece todas as operações
+3. App chama funções da lógica (`SistemaBiblioteca`)
+4. Sistema usa classes de domínio
+5. Lógica termina → App mostra o resultado
+
+---
+
+# 🧪 **Restrições & Validações Implementadas**
+
+### Livros:
+
+✔ Proíbe duplicação com modos diferentes
+✔ Proíbe empréstimo VIPOnly para regular
+✔ Proíbe emprestar livro não disponível
+
+### Associados:
+
+✔ Nome convertido corretamente
+✔ Busca insensível a maiúsculas/minúsculas
+
+### Eventos:
+
+✔ VIP tem prioridade
+✔ Impede duplicação de inscrição
+✔ Registra todas reservas
+
+### Multas:
+
+✔ VIP recebe desconto automático
+✔ Persistência garantida
+
+---
+
+# ✔️ **Como Executar**
+
+Compile:
 
 ```
 javac *.java
 ```
 
-### 2. Execute:
+Execute:
 
 ```
-java Main
-```
-
----
-
-## 🖥 Menu Principal
-
-```
-1. Cadastrar associado
-2. Cadastrar livro
-3. Realizar empréstimo
-4. Devolver livro
-5. Visualizar relatórios
-0. Sair e salvar
+java BibliotecaApp
 ```
 
 ---
 
-## 🎁 Benefícios VIP
+# 💡 **Possíveis Melhorias Futuras**
 
-Associados VIP têm:
-
-* 5 dias a mais de prazo
-* 50% de desconto nas multas
-* Acesso exclusivo a livros raros
-
----
-
-## 🧮 Cálculo da Multa
-
-```
-diasDeAtraso = diasEntreEmprestimoEDevolucao - prazoAssociado
-multaBase = diasDeAtraso * 1.0
-
-if VIP:
-    multaFinal = multaBase * 0.5
-else:
-    multaFinal = multaBase
-```
+* Interface gráfica (JavaFX)
+* Banco de dados SQLite ou PostgreSQL
+* Controle de renovação de empréstimo
+* Geração de PDF dos relatórios
 
 ---
 
-## 🗄 Persistência
+# 🎉 **Conclusão**
 
-Cada ação é automaticamente salva em arquivo ao sair.
-Na próxima execução, tudo é restaurado.
+Este sistema é uma aplicação completa com:
 
----
+* Persistência
+* Regras avançadas
+* Prioridade por tipo de associado
+* Gestão de eventos
+* Boas práticas de organização
 
-## 📝 Exemplo de Registro de Empréstimo (dados_emprestimos.txt)
-
-```
-O Hobbit;João;2025-01-10;2025-01-17;true
-Dom Quixote (1ª Edição);Maria;2025-01-08;null;false
-```
-
----
-
-## 🛠 Tecnologias Utilizadas
-
-* **Java 8+**
-* Manipulação de arquivos (`FileReader`, `FileWriter`)
-* Programação Orientada a Objetos
-* Uso de datas com `LocalDate` e `ChronoUnit`
-
----
-
-## 📄 Licença
-
-Uso livre para fins educacionais e acadêmicos.
-
----
