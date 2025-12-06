@@ -1,44 +1,51 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Evento {
+
     private String nome;
+    private LocalDate data;
     private int vagas;
     private List<Associado> participantes;
-    private List<Evento> eventos;
 
-
-    public Evento(String nome, int vagas) {
+    public Evento(String nome, LocalDate data, int vagas) {
         this.nome = nome;
+        this.data = data;
         this.vagas = vagas;
         this.participantes = new ArrayList<>();
-        eventos = new ArrayList<>();
-
     }
 
-    public boolean reservarVaga(Associado associado) {
-        if (participantes.size() < vagas) {
-            participantes.add(associado);
-            return true;
-        }
-        return false;
+    public String getNome() { return nome; }
+    public LocalDate getData() { return data; }
+    public int getVagas() { return vagas; }
+    public List<Associado> getParticipantes() { return participantes; }
+    public int getVagasDisponiveis() {
+        return vagas - participantsCount();
     }
 
-    @Override
-    public String toString() {
-        return nome + " | Vagas restantes: " + (vagas - participantes.size());
-    }
-    public String getNome() {
-        return nome;
+    // Evita acesso direto ao tamanho da lista
+    private int participantsCount() {
+        return participantes.size();
     }
 
-    public boolean reservaVIP(Associado associado) {
-        // VIP sempre tenta entrar antes caso esteja no limite
-        if (participantes.size() < vagas) {
-            participantes.add(0, associado);  // VIP entra no topo
-            return true;
-        }
-        return false;
+    // =============================
+    //  Reserva de vaga
+    // =============================
+    public boolean reservarVaga(Associado a) {
+        if (participantsCount() >= vagas) return false;
+        if (participantes.contains(a)) return false;
+        participantes.add(a);
+        return true;
     }
 
+    // =============================
+    //   Exportar para TXT
+    // =============================
+    public String exportarTexto() {
+        String inscricoes = String.join(",",
+                participantes.stream().map(Associado::getNome).toArray(String[]::new)
+        );
+        return nome + ";" + data + ";" + vagas + ";" + inscricoes;
+    }
 }
